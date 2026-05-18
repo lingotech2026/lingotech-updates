@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { Icons } from '../Icons';
+import { User, Calendar, ArrowRight } from 'lucide-react';
 import ScrollReveal from '../ScrollReveal';
 import type { BlogPost } from '../../constants/blog';
 
@@ -10,74 +10,79 @@ interface BlogCardProps {
 }
 
 /**
- * Blog card component for displaying blog post previews
- * Features: responsive design, hover effects, category badges, reading time
+ * Premium Horizontal Blog Card
+ * Re-designed to match our brand new light blue/white system.
  */
 export default function BlogCard({ post, index = 0 }: BlogCardProps) {
   return (
-    <ScrollReveal animation={index % 2 === 0 ? 'up' : 'zoom'} delay={index * 80}>
-      <article className="blog-card h-full flex flex-col">
-        {/* Featured Image */}
-        <Link
-          href={`/blog/${post.slug}`}
-          className="relative w-full h-48 sm:h-56 md:h-64 overflow-hidden rounded-t-xl sm:rounded-t-2xl group/image"
-        >
-          <div className="absolute inset-0 bg-linear-to-t from-primary-900/60 to-transparent z-10 opacity-0 group-hover/image:opacity-100 transition-opacity duration-300" />
+    <ScrollReveal animation="up" delay={index * 50}>
+      <div className="group flex flex-col md:flex-row bg-white rounded-sm shadow-sm border border-slate-100 overflow-hidden transition-all duration-300 hover:shadow-xl mb-8">
+        
+        {/* Left Side: Image Area */}
+        <div className="relative w-full md:w-[35%] lg:w-[30%] h-56 md:h-auto overflow-hidden">
           <Image
             src={post.featuredImage}
             alt={post.title}
             fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            className="object-cover group-hover/image:scale-110 transition-transform duration-500"
+            className="object-cover transition-transform duration-700 group-hover:scale-110"
           />
+          {/* Overlay with Title & Category */}
+          <div className="absolute inset-0 bg-[#0B3C91]/40 flex flex-col items-center justify-center p-6 text-center">
+            <h4 className="text-white font-bold text-[10px] md:text-[11px] uppercase leading-tight mb-2">
+              {post.title}
+            </h4>
+            <p className="text-blue-100/90 text-[8px] md:text-[9px]">
+              {post.category}
+            </p>
+          </div>
+        </div>
 
-          {/* Featured Badge */}
-          {post.isFeatured && (
-            <div className="absolute top-4 right-4 z-20 blog-featured-badge">
-              <Icons.Star className="w-3 h-3" />
-              Featured
-            </div>
-          )}
-        </Link>
-
-        {/* Card Content */}
-        <div className="flex flex-col grow p-5 sm:p-6">
-
-          {/* Title */}
-          <Link
-            href={`/blog/${post.slug}`}
-            className="group/title"
-          >
-            <h3 className="text-lg sm:text-xl font-bold text-primary-700 mb-2 sm:mb-3 line-clamp-2 group-hover/title:text-secondary-600 transition-colors">
+        {/* Right Side: Content Area */}
+        <div className="flex-1 p-6 md:p-8 flex flex-col justify-center">
+          <Link href={`/blog/${post.slug}`}>
+            <h3 className="text-sm md:text-base font-bold text-slate-800 mb-2 group-hover:text-[#0B3C91] transition-colors leading-snug">
               {post.title}
             </h3>
           </Link>
-
-          {/* Excerpt */}
-          <p className="text-sm md:text-base text-body leading-relaxed mb-4 line-clamp-3 grow">
+          
+          <p className="text-slate-500 text-[10px] md:text-[11px] line-clamp-2 mb-5 leading-relaxed">
             {post.excerpt}
           </p>
 
-          {/* Tags */}
-          <div className="flex flex-wrap gap-2 mb-4">
-            {post.tags.slice(0, 3).map((tag: string) => (
-              <span key={tag} className="blog-tag">
-                {tag}
-              </span>
-            ))}
-          </div>
+          {/* Metadata Meta */}
+          <div className="flex flex-wrap items-center gap-6 mt-auto">
+            <div className="flex items-center gap-2">
+              <div className="w-7 h-7 rounded-full bg-blue-50 flex items-center justify-center">
+                <User className="w-3.5 h-3.5 text-[#0B3C91]" />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-[#0B3C91] text-[10px] font-bold">{post.author.name}</span>
+                <span className="text-[9px] text-slate-400 font-medium">Author</span>
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-2">
+              <div className="w-7 h-7 rounded-full bg-slate-50 flex items-center justify-center">
+                <Calendar className="w-3.5 h-3.5 text-slate-400" />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-slate-800 text-[10px] font-bold tracking-tight">{post.publishedAt}</span>
+                <span className="text-[9px] text-slate-400 font-medium">Published Date</span>
+              </div>
+            </div>
 
-          {/* Read More Link */}
-          <Link
-            href={`/blog/${post.slug}`}
-            className="inline-flex items-center text-sm font-semibold text-primary-600 hover:text-secondary-600 transition-colors gap-2 mt-4 focus-visible:outline-offset-2 focus-visible:ring-2 focus-visible:ring-primary-600 rounded"
-            aria-label={`Read more about ${post.title}`}
-          >
-            Read full article
-            <Icons.ArrowRightUp className="w-4 h-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
-          </Link>
+            <Link 
+              href={`/blog/${post.slug}`}
+              className="ml-auto flex items-center gap-2 text-[#0B3C91] font-bold text-xs uppercase tracking-wider group/link hover:text-blue-800 transition-colors"
+            >
+              Read More 
+              <div className="w-6 h-6 rounded-full border border-[#0B3C91] flex items-center justify-center group-hover/link:bg-[#0B3C91] group-hover/link:text-white transition-all">
+                <ArrowRight className="w-3 h-3" />
+              </div>
+            </Link>
+          </div>
         </div>
-      </article>
+      </div>
     </ScrollReveal>
   );
 }

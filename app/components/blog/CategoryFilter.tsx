@@ -9,16 +9,16 @@ interface CategoryFilterProps {
 
 /**
  * Category filter component for blog posts
- * Allows users to filter posts by category with smooth transitions
+ * Re-designed to be ultra-clean, micro-sized and premium brand blue themed.
  */
 export default function CategoryFilter({ selectedCategory, onCategoryChange }: CategoryFilterProps) {
   const allCategories = [
-    { value: 'All' as const, label: 'All Posts', color: 'var(--lt-primary-600)' },
+    { value: 'All' as const, label: 'All Posts' },
     ...BLOG_CATEGORIES,
   ];
 
   return (
-    <div className="flex flex-wrap gap-2 sm:gap-3 justify-center mb-8 sm:mb-12">
+    <div className="flex flex-wrap gap-2 justify-center mb-10">
       {allCategories.map((category) => {
         const isSelected = selectedCategory === category.value;
         
@@ -27,17 +27,14 @@ export default function CategoryFilter({ selectedCategory, onCategoryChange }: C
             key={category.value}
             onClick={() => onCategoryChange(category.value)}
             className={`
-              px-4 py-2 rounded-lg sm:rounded-xl text-sm sm:text-base font-semibold
-              transition-all duration-300 transform
+              px-4 py-1.5 rounded-full text-[10px] md:text-[11px] font-bold uppercase tracking-wider
+              transition-all duration-300 border
               ${isSelected
-                ? 'bg-primary-700 text-white shadow-lg scale-105'
-                : 'bg-surface text-primary-700 border-2 border-border hover:border-primary-600 hover:bg-primary-50'
+                ? 'bg-[#0B3C91] text-white border-[#0B3C91] shadow-md shadow-blue-500/10'
+                : 'bg-white text-gray-500 border-gray-200 hover:border-[#0B3C91] hover:text-[#0B3C91]'
               }
-              focus-visible:outline-offset-2 focus-visible:ring-2 focus-visible:ring-primary-600
+              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B3C91]
             `}
-            style={{
-              ...(isSelected && category.value !== 'All' ? { backgroundColor: category.color } : {}),
-            }}
             aria-pressed={isSelected}
           >
             {category.label}
