@@ -1,56 +1,74 @@
-import Image from "next/image";
-
-const tools = [
-  { name: "React", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" },
-  { name: "Next.js", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg" },
-  { name: "TypeScript", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" },
-  { name: "Tailwind CSS", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-plain.svg" },
-  { name: "Node.js", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" },
-  { name: "Python", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" },
-  { name: "PostgreSQL", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" },
-  { name: "Docker", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" },
-  { name: "AWS", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-original-wordmark.svg" },
-  { name: "Figma", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg" },
-];
+'use client';
+import { useMemo } from 'react';
+import { TECHNOLOGIES, Technology } from '../constants/technologies';
+import ScrollReveal from './ScrollReveal';
 
 export default function ToolsMarquee() {
-  return (
-    <section className="py-12 md:py-16 bg-white relative z-10 border-t border-gray-100">
-      <div className="max-w-7xl mx-auto px-6 sm:px-10 md:px-14 lg:px-20 mb-10">
-        <h2 className="text-xs md:text-sm font-bold text-gray-900 text-center mb-4 uppercase">
-          OUR TOOLS & TECHNOLOGIES
-        </h2>
-        <p className="text-center text-xs text-gray-600 max-w-3xl mx-auto leading-relaxed">
-          We are proud to work with the most modern and respected technologies in the industry. 
-          By utilizing cutting-edge stacks, we help organizations succeed and grow.
-        </p>
-      </div>
+    const { row1, row2 } = useMemo(() => ({
+        row1: TECHNOLOGIES.slice(0, Math.ceil(TECHNOLOGIES.length / 2)),
+        row2: TECHNOLOGIES.slice(Math.ceil(TECHNOLOGIES.length / 2)),
+    }), []);
 
-      <div className="relative flex overflow-hidden whitespace-nowrap bg-white py-4 w-full">
-        {/* Left gradient mask */}
-        <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-white to-transparent z-10" />
-        
-        {/* Right gradient mask */}
-        <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-white to-transparent z-10" />
+    const renderTechCard = (tech: Technology, index: number) => {
+        const isNextJs = tech.id === 'nextjs';
 
-        <div className="flex animate-marquee items-center gap-12 md:gap-20 whitespace-nowrap px-6">
-          {tools.concat(tools).map((tool, index) => (
+        return (
             <div
-              key={`${tool.name}-${index}`}
-              className="flex items-center justify-center shrink-0 w-16 h-16 md:w-20 md:h-20 grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100"
+                key={`${tech.id}-${index}`}
+                className="inline-flex items-center gap-2 px-5 py-3 mx-2 bg-[#F8FAFC] border border-slate-200/60 transition-all duration-300 shadow-[0_2px_8px_rgba(15,23,42,0.01)] hover:shadow-[0_8px_16px_rgba(11,60,145,0.04)]"
+                onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = "var(--green-accent)";
+                    e.currentTarget.style.transform = 'translateY(-2px)';
+                }}
+                onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = "rgba(15, 23, 42, 0.06)";
+                    e.currentTarget.style.transform = 'translateY(0)';
+                }}
             >
-              <Image
-                src={tool.icon}
-                alt={tool.name}
-                width={80}
-                height={80}
-                className="object-contain w-full h-full"
-                unoptimized
-              />
+                {isNextJs ? (
+                    <svg style={{ width: 16, height: 16, color: 'var(--green-accent)' }} viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm6.75 18.75l-4.237-5.592-3.813 5.592h-1.2l4.413-6.471-4.413-5.811h1.2l3.813 5.011 4.237-5.011h1.2l-4.413 5.211 4.413 6.071h-1.2z" />
+                    </svg>
+                ) : (
+                    <i className={`${tech.iconClass}`} style={{ fontSize: '1rem', color: 'var(--green-accent)' }} />
+                )}
+                <span className="text-xs font-bold text-slate-800 tracking-widest uppercase" style={{ fontFamily: "'Poppins', sans-serif" }}>
+                    {tech.name}
+                </span>
             </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
+        );
+    };
+
+    return (
+        <section className="relative w-full bg-white py-16 overflow-hidden border-t border-b border-slate-200/80">
+            <div className="container text-center mb-12">
+                <ScrollReveal animation="up">
+                    <span className="text-xs font-bold uppercase tracking-widest" style={{ color: "var(--green-accent)", fontFamily: "'Poppins', sans-serif" }}>
+                        TECHNOLOGY STACK
+                    </span>
+                </ScrollReveal>
+                <ScrollReveal animation="up" delay={150}>
+                    <h2 className="text-3xl lg:text-4xl font-black text-slate-900 uppercase mt-3" style={{ fontFamily: "'Poppins', sans-serif" }}>
+                        MODERN TOOLS FOR <span style={{ color: "var(--green-accent)" }}>MODERN BUSINESSES</span>
+                    </h2>
+                </ScrollReveal>
+            </div>
+
+            <div className="relative z-10 flex flex-col gap-4">
+                <div className="marquee-wrapper">
+                    <div className="marquee-track marquee-scroll-right">
+                        {[...row1, ...row1, ...row1, ...row1].map((tech, index) => renderTechCard(tech, index))}
+                    </div>
+                </div>
+                <div className="marquee-wrapper">
+                    <div className="marquee-track marquee-scroll-left">
+                        {[...row2, ...row2, ...row2, ...row2].map((tech, index) => renderTechCard(tech, index))}
+                    </div>
+                </div>
+            </div>
+            
+            <div className="absolute top-0 bottom-0 left-0 w-24 bg-gradient-to-r from-white to-transparent z-20 pointer-events-none" />
+            <div className="absolute top-0 bottom-0 right-0 w-24 bg-gradient-to-l from-white to-transparent z-20 pointer-events-none" />
+        </section>
+    );
 }
