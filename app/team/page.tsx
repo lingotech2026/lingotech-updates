@@ -1,16 +1,12 @@
 import Image from 'next/image';
-import Script from 'next/script';
-import { createElement } from 'react';
 import { TEAM_MEMBERS } from '../constants/team';
 import Footer from '../components/Footer';
 import PageHeroSection from '../components/PageHeroSection';
 import Navbar from '../components/Navbar';
+import ScrollReveal from '../components/ScrollReveal';
+import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
 import type { Metadata } from 'next';
-
-const TEAM_ANIMATION_SCRIPT_SRC =
-  'https://unpkg.com/@lottiefiles/dotlottie-wc@0.9.3/dist/dotlottie-wc.js';
-const TEAM_HERO_LOTTIE_SRC =
-  'https://lottie.host/ba14f795-0e18-41a0-8c0d-2725efe430fe/LHcs3pQOdN.lottie';
 
 export const metadata: Metadata = {
   title: 'Our Team - Lingotech Solutions',
@@ -19,105 +15,89 @@ export const metadata: Metadata = {
 
 export default function TeamPage() {
   return (
-    <div className="min-h-screen bg-linear-to-b from-surface via-background to-surface">
-      <Script
-        src={TEAM_ANIMATION_SCRIPT_SRC}
-        type="module"
-        strategy="afterInteractive"
-      />
+    <div className="min-h-screen bg-white text-slate-900">
       <Navbar />
+
       <PageHeroSection
         badge="Meet Our Team"
-        title="Meet Our Team"
+        title="The People Behind The Product"
         description="We're a diverse group of designers, developers, and strategists united by a passion for creating exceptional digital experiences."
-        backgroundContent={
-          <div className="absolute inset-0">
-            {/* Ambient blobs */}
-            <div className="absolute -top-16 left-[-6%] h-72 w-72 rounded-full bg-primary-100/25 blur-3xl sm:h-96 sm:w-96" />
-            <div className="absolute -bottom-24 left-1/3 h-80 w-80 rounded-full bg-secondary-400/20 blur-3xl sm:h-112 sm:w-md" />
-            {/* Lottie animation — right side background */}
-            <div className="absolute right-[2%] top-1/2 -translate-y-1/2 h-[90%] aspect-square opacity-75">
-              <div className="absolute inset-0 rounded-full bg-secondary-400/15 blur-3xl" />
-              {createElement('dotlottie-wc', {
-                src: TEAM_HERO_LOTTIE_SRC,
-                autoplay: true,
-                loop: true,
-                style: { width: '100%', height: '100%' },
-              })}
-            </div>
-            {/* Gradient overlay — fades text area, lets animation breathe on the right */}
-            <div className="absolute inset-0 bg-linear-to-r from-primary-900/85 via-primary-800/60 to-transparent" />
-            <div className="absolute inset-0 bg-linear-to-b from-primary-900/20 via-transparent to-primary-900/30" />
-          </div>
-        }
       />
 
-      <section className="relative py-12 sm:py-16 md:py-20 lg:py-24">
-        <div className="container mx-auto px-4 sm:px-6 md:px-8">
-          <div className="max-w-7xl mx-auto">
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 md:gap-6 lg:grid-cols-3 lg:gap-8">
-              {TEAM_MEMBERS.map((member) => (
-                <article
-                  key={member.name}
-                  className="group relative overflow-hidden rounded-xl border-2 border-border bg-surface transition-all duration-300 hover:-translate-y-2 hover:border-secondary-600 hover:shadow-xl hover:shadow-primary-600/20 sm:rounded-2xl md:rounded-3xl"
+      {/* Team Grid */}
+      <section className="py-20 lg:py-28 bg-white">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {TEAM_MEMBERS.map((member, index) => (
+              <ScrollReveal key={member.name} animation="up" delay={index * 100}>
+                <div
+                  className="group relative overflow-hidden bg-[#F8FAFC] border border-slate-200/80 transition-all duration-300 hover:border-[var(--green-accent)] hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(11,60,145,0.06)]"
                 >
-                  <div className="relative h-56 overflow-hidden sm:h-64 md:h-72 lg:h-80">
+                  {/* Top accent bar on hover */}
+                  <div className="absolute top-0 left-0 right-0 h-[2px] opacity-0 group-hover:opacity-100 transition-opacity z-20" style={{ backgroundColor: 'var(--green-accent)' }} />
+
+                  {/* Photo */}
+                  <div className="relative h-56 sm:h-64 overflow-hidden bg-slate-100">
                     <Image
                       src={member.image}
                       alt={`${member.name} - ${member.role}`}
-                      width={350}
+                      width={400}
                       height={280}
-                      className="w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-500"
+                      className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
                       loading="lazy"
                     />
-                    <div className="absolute inset-0 bg-linear-to-t from-black/40 via-black/20 to-transparent" />
+                    {/* Gradient overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
                   </div>
 
-                  <div className="relative p-4 sm:p-5 md:p-6 text-center">
-                    <h3
-                      className="mb-1.5 font-bold text-primary-700 sm:mb-2"
-                      style={{ fontSize: 'clamp(1.125rem, 1.05rem + 0.375vw, 1.5rem)' }}
-                    >
+                  {/* Info */}
+                  <div className="p-5 text-center border-t border-slate-200/50">
+                    <h3 className="font-black text-slate-900 uppercase mb-1.5 text-base tracking-wide" style={{ fontFamily: "'Poppins', sans-serif" }}>
                       {member.name}
                     </h3>
-                    <p className="text-secondary-600 font-semibold text-[10px] xs:text-xs sm:text-sm uppercase tracking-wide mb-3 sm:mb-4">
+                    <p className="text-[10px] font-bold uppercase tracking-widest" style={{ color: 'var(--green-accent)', fontFamily: "'Poppins', sans-serif" }}>
                       {member.role}
                     </p>
-                    <div className="mx-auto h-0.5 w-12 bg-linear-to-r from-transparent via-secondary-600 to-transparent sm:h-1 sm:w-16" />
+                    <div className="mx-auto mt-3 w-10 h-[1px]" style={{ backgroundColor: 'rgba(11,60,145,0.25)' }} />
                   </div>
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
+        </div>
+      </section>
 
-                  <div className="absolute inset-0 rounded-xl sm:rounded-2xl md:rounded-3xl ring-1 ring-inset ring-primary-600/10 pointer-events-none" />
-                </article>
-              ))}
+      {/* Join CTA */}
+      <section className="py-20 bg-[#F8FAFC] border-t border-slate-200/80">
+        <div className="container mx-auto px-4 lg:px-8">
+          <ScrollReveal animation="up">
+            <div className="relative bg-white border border-slate-200 p-10 lg:p-14 text-center overflow-hidden max-w-2xl mx-auto shadow-sm">
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[300px] h-[150px] opacity-[0.06] pointer-events-none" style={{ background: 'radial-gradient(ellipse at center, var(--green-accent), transparent 70%)' }} />
+              
+              <div className="relative z-10">
+                <span className="text-xs font-bold uppercase tracking-widest mb-4 block" style={{ color: 'var(--green-accent)', fontFamily: "'Poppins', sans-serif" }}>
+                  JOIN US
+                </span>
+                <h2 className="text-2xl lg:text-3xl font-black text-slate-900 uppercase mb-4" style={{ fontFamily: "'Poppins', sans-serif" }}>
+                  Want to Join Our Team?
+                </h2>
+                <p className="text-slate-600 text-sm mb-8 max-w-md mx-auto">
+                  We&apos;re always looking for talented individuals who share our passion for innovation and building great products.
+                </p>
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center gap-2 px-6 py-3 text-sm font-bold uppercase tracking-wide text-white transition-all duration-300 hover:opacity-90 shadow-md"
+                  style={{ backgroundColor: 'var(--green-accent)', fontFamily: "'Poppins', sans-serif" }}
+                >
+                  View Open Positions
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </div>
             </div>
-          </div>
+          </ScrollReveal>
         </div>
       </section>
 
-      <section className="relative py-12 sm:py-14 md:py-16 lg:py-20">
-        <div className="container mx-auto px-4 sm:px-6 md:px-8">
-          <div className="max-w-4xl mx-auto text-center bg-linear-to-r from-primary-50 via-surface to-secondary-50 border-2 border-primary-200/90 rounded-xl sm:rounded-2xl md:rounded-3xl p-6 sm:p-8 md:p-10 lg:p-12 shadow-soft">
-            <h2
-              className="mb-2 font-bold text-primary-800 sm:mb-3 md:mb-4"
-              style={{ fontSize: 'clamp(1.5rem, 1.35rem + 0.75vw, 2.25rem)' }}
-            >
-              Want to Join Our Team?
-            </h2>
-            <p
-              className="mb-5 text-text-secondary sm:mb-6 md:mb-8"
-              style={{ fontSize: 'clamp(0.875rem, 0.825rem + 0.25vw, 1.125rem)' }}
-            >
-              We&apos;re always looking for talented individuals who share our passion for innovation.
-            </p>
-            <a
-              href="#career"
-              className="btn-primary inline-flex items-center justify-center px-5 sm:px-6 md:px-8 rounded-lg sm:rounded-xl font-semibold text-sm sm:text-base md:text-lg w-full sm:w-auto"
-            >
-              View Open Positions
-            </a>
-          </div>
-        </div>
-      </section>
       <Footer />
     </div>
   );
