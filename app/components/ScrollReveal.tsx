@@ -31,17 +31,17 @@ export default function ScrollReveal({
   once = true,
 }: ScrollRevealProps) {
   const elementRef = useRef<HTMLDivElement | null>(null);
+  // Always initialize to false to match server-rendered HTML (no `is-visible` class on SSR).
+  // All browser API access is deferred to useEffect to avoid hydration mismatches.
   const [isVisible, setIsVisible] = useState(false);
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(() => {
-    if (typeof window === 'undefined') {
-      return false;
-    }
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
-    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  });
-
+  // Sync reduced-motion preference after mount (client-only)
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    // Set the initial client value now that we're mounted
+    setPrefersReducedMotion(mediaQuery.matches);
+
     const handleMotionChange = (event: MediaQueryListEvent) => {
       setPrefersReducedMotion(event.matches);
     };
@@ -53,10 +53,11 @@ export default function ScrollReveal({
     };
   }, []);
 
+  // Set up IntersectionObserver after mount (client-only)
   useEffect(() => {
-    const canObserve = typeof window !== 'undefined' && 'IntersectionObserver' in window;
-
-    if (prefersReducedMotion || !canObserve) {
+    if (prefersReducedMotion || !('IntersectionObserver' in window)) {
+      // If reduced motion or no observer support, mark visible immediately
+      setIsVisible(true);
       return;
     }
 
@@ -96,10 +97,9 @@ export default function ScrollReveal({
     '--reveal-duration': `${duration}ms`,
   } as CSSProperties;
 
-  const shouldRevealImmediately =
-    prefersReducedMotion || (typeof window !== 'undefined' && !('IntersectionObserver' in window));
-
-  const revealClassName = `reveal reveal-${animation} ${isVisible || shouldRevealImmediately ? 'is-visible' : ''} ${className}`.trim();
+  // On SSR: isVisible=false → no `is-visible` class → matches server HTML exactly.
+  // On client after mount: IntersectionObserver sets isVisible=true when in viewport.
+  const revealClassName = `reveal reveal-${animation}${isVisible ? ' is-visible' : ''}${className ? ` ${className}` : ''}`;
 
   return (
     <div ref={elementRef} className={revealClassName} style={style}>
