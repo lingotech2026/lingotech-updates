@@ -3,6 +3,7 @@ import Script from 'next/script';
 import Navbar from './components/Navbar';
 import HeroSection from './components/HeroSection';
 import ServicesSection from './components/ServicesSection';
+import PortfolioSection from './components/PortfolioSection';
 import ToolsMarquee from './components/ToolsMarquee';
 import AboutSection from './components/AboutSection';
 import WhyChooseUsSection from './components/WhyChooseUsSection';
@@ -68,7 +69,7 @@ export default function Home() {
         '@id': `${SITE_URL}#organization`,
         name: 'Lingotech Solutions',
         url: SITE_URL,
-        logo: `${SITE_URL}/LT.jpeg`,
+        logo: `${SITE_URL}/lingo-tech.png`,
         email: 'solutionslingotech@gmail.com',
         telephone: '+977 9748263080',
         address: {
@@ -100,6 +101,7 @@ export default function Home() {
       <Navbar />
       <HeroSection />
       <ServicesSection />
+      <PortfolioSection />
       <AboutSection />
       <WhyChooseUsSection />
       <LatestBlogSection />
