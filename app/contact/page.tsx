@@ -1,65 +1,50 @@
 "use client";
 
-import { useState, FormEvent, createElement } from "react";
-import Script from "next/script";
+import { useState, FormEvent } from "react";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import PageHeroSection from "../components/PageHeroSection";
-import FormField from "../components/FormField";
-import { Send, User, Mail, MessageSquare, FileText } from "lucide-react";
-import { CONTACT_INFO } from "../constants/contact";
+import { Send, User, Mail, MessageSquare, FileText, Phone, MapPin } from "lucide-react";
+import ScrollReveal from "../components/ScrollReveal";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const CONTACT_ANIMATION_SCRIPT_SRC =
-  "https://unpkg.com/@lottiefiles/dotlottie-wc@0.9.3/dist/dotlottie-wc.js";
-const CONTACT_HERO_LOTTIE_SRC =
-  "https://lottie.host/a86780b7-095a-4d23-834a-c6781a623879/GzRxwblMs0.lottie";
 type FormErrors = Record<string, string>;
 
-export default function ContactPage() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    subject: "",
-    message: "",
-  });
+const CONTACT_DETAILS = [
+  { icon: Phone, label: "Phone", value: "+977 9748263080", href: "tel:+9779748263080" },
+  { icon: Mail, label: "Email", value: "solutionslingotech@gmail.com", href: "mailto:solutionslingotech@gmail.com" },
+  { icon: MapPin, label: "Location", value: "Lalitpur, Kathmandu, Nepal", href: null },
+];
 
+export default function ContactPage() {
+  const [formData, setFormData] = useState({ name: "", email: "", subject: "", message: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
   const [errors, setErrors] = useState<FormErrors>({});
 
   const validateForm = () => {
     const newErrors: FormErrors = {};
-    
     if (!formData.name.trim()) newErrors.name = "Name is required";
     if (!formData.email.trim()) newErrors.email = "Email is required";
     else if (!EMAIL_PATTERN.test(formData.email)) newErrors.email = "Please enter a valid email";
     if (!formData.subject.trim()) newErrors.subject = "Subject is required";
     if (!formData.message.trim()) newErrors.message = "Message is required";
-    
     return newErrors;
   };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    
     const formErrors = validateForm();
     if (Object.keys(formErrors).length > 0) {
       setErrors(formErrors);
       setSubmitStatus("error");
       return;
     }
-    
     setErrors({});
     setIsSubmitting(true);
-    
-    // Simulate form submission
     await new Promise(resolve => setTimeout(resolve, 1500));
-    
     setIsSubmitting(false);
     setSubmitStatus("success");
-    
-    // Reset form after success
     setTimeout(() => {
       setFormData({ name: "", email: "", subject: "", message: "" });
       setSubmitStatus("idle");
@@ -68,204 +53,246 @@ export default function ContactPage() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+    if (errors[name]) setErrors(prev => ({ ...prev, [name]: "" }));
+  };
 
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+  const inputStyle = {
+    width: '100%',
+    backgroundColor: '#F8FAFC',
+    border: '1px solid #E2E8F0',
+    color: '#0F172A',
+    padding: '0.75rem 1rem',
+    fontSize: '0.875rem',
+    outline: 'none',
+    transition: 'border-color 0.2s',
+  };
 
-    // Clear error for this field
-    if (errors[name]) {
-      setErrors(prev => ({
-        ...prev,
-        [name]: ""
-      }));
-    }
+  const labelStyle = {
+    display: 'block',
+    color: '#475569',
+    fontSize: '0.75rem',
+    fontWeight: 700,
+    textTransform: 'uppercase' as const,
+    letterSpacing: '0.1em',
+    marginBottom: '0.5rem',
+    fontFamily: "'Poppins', sans-serif",
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <Script
-        src={CONTACT_ANIMATION_SCRIPT_SRC}
-        type="module"
-        strategy="afterInteractive"
-      />
+    <div className="min-h-screen bg-white text-slate-900">
       <Navbar />
+
       <PageHeroSection
         badge="Get in Touch"
         title="Contact Us"
         description="Have a question or ready to start your next project? We're here to help and would love to hear from you."
-        backgroundContent={
-          <div className="absolute inset-0">
-            {/* Ambient blobs */}
-            <div className="absolute -top-16 left-[-6%] h-72 w-72 rounded-full bg-primary-100/25 blur-3xl sm:h-96 sm:w-96" />
-            <div className="absolute -bottom-24 left-1/3 h-80 w-80 rounded-full bg-secondary-400/20 blur-3xl sm:h-112 sm:w-md" />
-            {/* Lottie animation — right side background */}
-            <div className="absolute right-[2%] top-1/2 -translate-y-1/2 h-[90%] aspect-square opacity-75">
-              <div className="absolute inset-0 rounded-full bg-secondary-400/15 blur-3xl" />
-              {createElement("dotlottie-wc", {
-                src: CONTACT_HERO_LOTTIE_SRC,
-                autoplay: true,
-                loop: true,
-                style: { width: "100%", height: "100%" },
-              })}
-            </div>
-            {/* Gradient overlay — fades text area, lets animation breathe on the right */}
-            <div className="absolute inset-0 bg-linear-to-r from-primary-900/85 via-primary-800/60 to-transparent" />
-            <div className="absolute inset-0 bg-linear-to-b from-primary-900/20 via-transparent to-primary-900/30" />
-          </div>
-        }
       />
 
-      {/* Contact Content Section */}
-        <section className="py-12 sm:py-16 md:py-20 lg:py-32 bg-surface">
-          <div className="container mx-auto px-4 sm:px-6 md:px-8">
-          <div className="max-w-6xl mx-auto">
-              <div className="grid lg:grid-cols-2 gap-8 sm:gap-10 md:gap-12 lg:gap-16">
-              
-              {/* Contact Form */}
+      {/* Contact Content */}
+      <section className="py-20 lg:py-28 bg-white border-t border-slate-200/85">
+        <div className="container mx-auto px-4 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20">
+
+            {/* Contact Form */}
+            <ScrollReveal animation="up">
               <div>
-                  <div className="mb-6 sm:mb-8 md:mb-10">
-                    <h2 className="font-bold text-primary-600 mb-3 sm:mb-4" style={{fontSize: 'clamp(1.5rem, 1.35rem + 0.75vw, 2.25rem)'}}>
-                    Send us a Message
+                <div className="mb-8">
+                  <span className="text-xs font-bold uppercase tracking-widest mb-3 block" style={{ color: 'var(--green-accent)', fontFamily: "'Poppins', sans-serif" }}>
+                    SEND A MESSAGE
+                  </span>
+                  <h2 className="text-2xl lg:text-3xl font-black text-slate-900 uppercase mb-3" style={{ fontFamily: "'Poppins', sans-serif" }}>
+                    Let&apos;s Talk About Your <span style={{ color: 'var(--green-accent)' }}>Project</span>
                   </h2>
-                    <p className="text-body" style={{fontSize: 'clamp(0.875rem, 0.825rem + 0.375vw, 1.125rem)'}}>
+                  <p className="text-slate-600 text-sm">
                     Fill out the form below and we&apos;ll get back to you as soon as possible.
                   </p>
                 </div>
 
-                  <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5 md:space-y-6">
-                  <FormField
-                    label="Your Name"
-                    name="name"
-                    icon={User}
-                    value={formData.name}
-                    onChange={handleChange}
-                    error={errors.name}
-                    placeholder="Full Name"
-                    required
-                  />
+                <form onSubmit={handleSubmit} className="space-y-5">
+                  {/* Name */}
+                  <div>
+                    <label style={labelStyle}>
+                      <User className="inline w-3 h-3 mr-1.5" />Your Name *
+                    </label>
+                    <input
+                      type="text"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleChange}
+                      placeholder="Full Name"
+                      style={inputStyle}
+                      onFocus={(e) => e.currentTarget.style.borderColor = 'var(--green-accent)'}
+                      onBlur={(e) => e.currentTarget.style.borderColor = errors.name ? '#ef4444' : '#E2E8F0'}
+                    />
+                    {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
+                  </div>
 
-                  <FormField
-                    label="Email Address"
-                    name="email"
-                    type="email"
-                    icon={Mail}
-                    value={formData.email}
-                    onChange={handleChange}
-                    error={errors.email}
-                    placeholder="your.email@example.com"
-                    required
-                  />
+                  {/* Email */}
+                  <div>
+                    <label style={labelStyle}>
+                      <Mail className="inline w-3 h-3 mr-1.5" />Email Address *
+                    </label>
+                    <input
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      placeholder="your.email@example.com"
+                      style={inputStyle}
+                      onFocus={(e) => e.currentTarget.style.borderColor = 'var(--green-accent)'}
+                      onBlur={(e) => e.currentTarget.style.borderColor = errors.email ? '#ef4444' : '#E2E8F0'}
+                    />
+                    {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
+                  </div>
 
-                  <FormField
-                    label="Subject"
-                    name="subject"
-                    icon={FileText}
-                    value={formData.subject}
-                    onChange={handleChange}
-                    error={errors.subject}
-                    placeholder="Project Inquiry"
-                    required
-                  />
+                  {/* Subject */}
+                  <div>
+                    <label style={labelStyle}>
+                      <FileText className="inline w-3 h-3 mr-1.5" />Subject *
+                    </label>
+                    <input
+                      type="text"
+                      name="subject"
+                      value={formData.subject}
+                      onChange={handleChange}
+                      placeholder="Project Inquiry"
+                      style={inputStyle}
+                      onFocus={(e) => e.currentTarget.style.borderColor = 'var(--green-accent)'}
+                      onBlur={(e) => e.currentTarget.style.borderColor = errors.subject ? '#ef4444' : '#E2E8F0'}
+                    />
+                    {errors.subject && <p className="text-red-500 text-xs mt-1">{errors.subject}</p>}
+                  </div>
 
-                  <FormField
-                    label="Message"
-                    name="message"
-                    icon={MessageSquare}
-                    value={formData.message}
-                    onChange={handleChange}
-                    error={errors.message}
-                    placeholder="Tell us about your project..."
-                    isTextarea
-                    rows={6}
-                    required
-                  />
+                  {/* Message */}
+                  <div>
+                    <label style={labelStyle}>
+                      <MessageSquare className="inline w-3 h-3 mr-1.5" />Message *
+                    </label>
+                    <textarea
+                      name="message"
+                      value={formData.message}
+                      onChange={handleChange}
+                      placeholder="Tell us about your project..."
+                      rows={5}
+                      style={{ ...inputStyle, resize: 'vertical' }}
+                      onFocus={(e) => e.currentTarget.style.borderColor = 'var(--green-accent)'}
+                      onBlur={(e) => e.currentTarget.style.borderColor = errors.message ? '#ef4444' : '#E2E8F0'}
+                    />
+                    {errors.message && <p className="text-red-500 text-xs mt-1">{errors.message}</p>}
+                  </div>
 
-                  {/* Submit Button */}
+                  {/* Submit */}
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full bg-primary-600 hover:bg-primary-700 text-inverse py-4 px-8 rounded-lg font-semibold text-lg transition-all duration-300 hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 group"
+                    className="w-full flex items-center justify-center gap-2 px-6 py-3 text-sm font-bold uppercase tracking-wide text-white transition-all duration-300 hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed group shadow-sm"
+                    style={{ backgroundColor: 'var(--green-accent)', fontFamily: "'Poppins', sans-serif" }}
                   >
                     {isSubmitting ? (
                       <>
-                        <div className="w-5 h-5 border-2 border-inverse/30 border-t-inverse rounded-full animate-spin"></div>
-                        <span>Sending...</span>
+                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        Sending...
                       </>
                     ) : (
                       <>
-                        <Send className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
-                        <span>Send Message</span>
+                        <Send className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                        Send Message
                       </>
                     )}
                   </button>
 
-                  {/* Success Message */}
                   {submitStatus === "success" && (
-                    <div className="p-4 bg-success-50 border border-success-100 rounded-lg" role="alert">
-                      <p className="text-success-700 font-medium">
-                        Thank you! Your message has been sent successfully. We&apos;ll get back to you soon.
+                    <div className="p-4 border border-green-200 bg-green-50 text-center mt-4">
+                      <p className="text-green-800 text-xs font-bold uppercase tracking-widest" style={{ fontFamily: "'Poppins', sans-serif" }}>
+                        Message Sent Successfully
                       </p>
                     </div>
                   )}
-                  
                   {submitStatus === "error" && Object.keys(errors).length > 0 && (
-                    <div className="p-4 bg-error-50 border border-error-100 rounded-lg" role="alert">
-                      <p className="text-error-700 font-medium">
-                        ✗ Please correct the errors above and try again.
+                    <div className="p-4 border border-red-200 bg-red-50 text-center mt-4">
+                      <p className="text-red-800 text-xs font-bold uppercase tracking-widest" style={{ fontFamily: "'Poppins', sans-serif" }}>
+                        Please correct the errors
                       </p>
                     </div>
                   )}
                 </form>
               </div>
+            </ScrollReveal>
 
-              {/* Contact Information */}
+            {/* Contact Info */}
+            <ScrollReveal animation="up" delay={150}>
               <div>
-                <div className="mb-10">
-                  <h2 className="text-3xl lg:text-4xl font-bold text-primary-600 mb-4">
-                    Contact Information
+                <div className="mb-8">
+                  <span className="text-xs font-bold uppercase tracking-widest mb-3 block" style={{ color: 'var(--green-accent)', fontFamily: "'Poppins', sans-serif" }}>
+                    CONTACT DETAILS
+                  </span>
+                  <h2 className="text-2xl lg:text-3xl font-black text-slate-900 uppercase mb-3" style={{ fontFamily: "'Poppins', sans-serif" }}>
+                    Reach Us <span style={{ color: 'var(--green-accent)' }}>Directly</span>
                   </h2>
-                  <p className="text-lg text-body">
-                    Reach out to us directly through any of these channels.
+                  <p className="text-slate-600 text-sm">
+                    Connect with our team through the following channels.
                   </p>
                 </div>
 
-                <div className="space-y-6">
-                  {CONTACT_INFO.map((info) => {
+                <div className="space-y-4 mb-10">
+                  {CONTACT_DETAILS.map((info) => {
                     const Icon = info.icon;
-                    const content = (
-                      <div className="flex items-start gap-4 p-6 bg-background rounded-xl hover:bg-primary-100 transition-colors duration-200">
-                        <div className="p-3 bg-primary-600/10 rounded-lg">
-                          <Icon className="w-6 h-6 text-primary-600" />
+                    const inner = (
+                      <div className="flex items-center gap-4 p-5 bg-[#F8FAFC] border border-slate-200/60 transition-all duration-300 hover:border-[var(--green-accent)] shadow-[0_2px_8px_rgba(15,23,42,0.01)]">
+                        <div className="w-10 h-10 flex items-center justify-center border border-slate-200 bg-white shrink-0 shadow-sm" style={{ backgroundColor: 'var(--green-bg-subtle)' }}>
+                          <Icon className="w-4 h-4" style={{ color: 'var(--green-accent)' }} />
                         </div>
                         <div>
-                          <h3 className="text-sm font-semibold text-body uppercase tracking-wide mb-1">
+                          <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-0.5" style={{ fontFamily: "'Poppins', sans-serif" }}>
                             {info.label}
-                          </h3>
-                          <p className="text-lg font-medium text-primary-600">
-                            {info.value}
                           </p>
+                          <p className="text-slate-700 text-sm font-medium">{info.value}</p>
                         </div>
                       </div>
                     );
-
                     return info.href ? (
-                      <a
-                        key={info.label}
-                        href={info.href}
-                        className="block"
-                      >
-                        {content}
-                      </a>
+                      <a key={info.label} href={info.href} className="block">{inner}</a>
                     ) : (
-                      <div key={info.label}>{content}</div>
+                      <div key={info.label}>{inner}</div>
                     );
                   })}
                 </div>
-              </div>
 
-            </div>
+                {/* Business hours */}
+                <div className="p-6 bg-[#F8FAFC] border border-slate-200/60 shadow-sm">
+                  <h3 className="text-sm font-bold text-slate-900 uppercase mb-4 tracking-wider" style={{ fontFamily: "'Poppins', sans-serif" }}>
+                    Business Hours
+                  </h3>
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center border-b border-slate-200/60 pb-2">
+                      <span className="text-slate-500 text-xs tracking-wider uppercase font-bold" style={{ fontFamily: "'Poppins', sans-serif" }}>Monday – Friday</span>
+                      <span className="text-slate-700 text-sm">9:00 AM – 6:00 PM</span>
+                    </div>
+                    <div className="flex justify-between items-center border-b border-slate-200/60 pb-2">
+                      <span className="text-slate-500 text-xs tracking-wider uppercase font-bold" style={{ fontFamily: "'Poppins', sans-serif" }}>Saturday</span>
+                      <span className="text-slate-700 text-sm">10:00 AM – 4:00 PM</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-slate-500 text-xs tracking-wider uppercase font-bold" style={{ fontFamily: "'Poppins', sans-serif" }}>Sunday</span>
+                      <span className="text-slate-400 text-sm">Closed</span>
+                    </div>
+                  </div>
+                  <div className="mt-6 flex items-center gap-2">
+                    <span className="flex items-center h-4">
+                      <span className="flex h-2 w-2 relative">
+                        <span className="animate-ping absolute inline-flex h-full w-full opacity-75 rounded-full" style={{ background: 'var(--green-accent)' }} />
+                        <span className="relative inline-flex rounded-full h-2 w-2" style={{ background: 'var(--green-accent)' }} />
+                      </span>
+                    </span>
+                    <span className="text-xs text-slate-700 uppercase tracking-widest font-bold" style={{ fontFamily: "'Poppins', sans-serif" }}>
+                      Accepting New Projects
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </ScrollReveal>
+
           </div>
         </div>
       </section>
