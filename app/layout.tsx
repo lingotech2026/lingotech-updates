@@ -1,13 +1,13 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter, Pinyon_Script } from 'next/font/google';
+import { Poppins, Pinyon_Script } from 'next/font/google';
 import './globals.css';
 import AppLoadingProvider from './components/AppLoadingProvider';
 import { SITE_URL } from './constants/site';
 
-const inter = Inter({
-  variable: '--font-inter',
+const poppins = Poppins({
+  variable: '--font-poppins',
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
+  weight: ['300', '400', '500', '600', '700', '800', '900'],
   display: 'swap',
 });
 
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   title: 'Lingotech Solutions - Turning Ideas Into Digital Reality',
   description: 'We build high-performance websites, web applications, and mobile apps that scale with your business.',
   icons: {
-    icon: '/LT.jpeg',
+    icon: '/lingo-tech.png',
   },
 };
 
@@ -46,7 +46,10 @@ export default function RootLayout({
           href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css"
         />
       </head>
-      <body className={`${inter.variable} ${pinyonScript.variable} antialiased bg-background`}>
+      <body 
+        className={`${poppins.variable} ${pinyonScript.variable} antialiased bg-white text-slate-900`}
+        style={{ fontFamily: 'var(--font-poppins), sans-serif' }}
+      >
         <AppLoadingProvider 
           minLoadingSeconds={1.2}
           showOnRefresh={true}
