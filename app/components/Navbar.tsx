@@ -1,162 +1,166 @@
 'use client';
 
-import type { ReactNode } from 'react';
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { usePathname } from 'next/navigation';
-import { NAV_LINKS } from '../constants/navigation';
-import { Icons } from './Icons';
-import LoadingLink from './LoadingLink';
+import Link from 'next/link';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
+import { useState, useEffect, useCallback } from 'react';
+import { NAV_LINKS } from '../constants/navigation';
 
-type NavbarProps = {
-  topRightContent?: ReactNode;
-};
-
-export default function Navbar({ topRightContent }: NavbarProps) {
+export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const previousOverflowRef = useRef<string | null>(null);
   const pathname = usePathname();
 
   useEffect(() => {
-    let frameId: number | null = null;
-    const handleScroll = () => {
-      if (frameId !== null) return;
-      frameId = window.requestAnimationFrame(() => {
-        const nextScrolled = window.scrollY > 50;
-        setScrolled((prev) => (prev === nextScrolled ? prev : nextScrolled));
-        frameId = null;
-      });
-    };
-    handleScroll();
+    const handleScroll = () => setScrolled(window.scrollY > 40);
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      if (frameId !== null) window.cancelAnimationFrame(frameId);
-    };
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   useEffect(() => {
-    if (isMobileMenuOpen) {
-      if (previousOverflowRef.current === null) {
-        previousOverflowRef.current = document.body.style.overflow;
-      }
-      document.body.style.overflow = 'hidden';
-      return;
-    }
-    if (previousOverflowRef.current !== null) {
-      document.body.style.overflow = previousOverflowRef.current;
-      previousOverflowRef.current = null;
-    }
+    document.body.style.overflow = isMobileMenuOpen ? 'hidden' : '';
   }, [isMobileMenuOpen]);
 
-  const toggleMobileMenu = useCallback(() => setIsMobileMenuOpen(prev => !prev), []);
-  const closeMobileMenu = useCallback(() => setIsMobileMenuOpen(false), []);
-
   const isActive = useCallback((href: string) => {
-    if (href.startsWith('#')) return false;
     if (href === '/') return pathname === '/';
     return pathname.startsWith(href);
   }, [pathname]);
 
+  const isDarkHeroZone = pathname === '/' && !scrolled;
+
+  const linkColor = isDarkHeroZone ? 'rgba(255, 255, 255, 0.85)' : 'var(--text-muted)';
+  const linkActiveColor = isDarkHeroZone ? '#ffffff' : 'var(--green-accent)';
+  const navBg = isDarkHeroZone ? 'transparent' : 'rgba(255, 255, 255, 0.95)';
+  const navBlur = isDarkHeroZone ? 'none' : 'blur(12px)';
+  const navBorder = isDarkHeroZone ? '1px solid transparent' : '1px solid rgba(15, 23, 42, 0.06)';
+  const mobileToggleColor = isDarkHeroZone ? '#ffffff' : '#0f172a';
+
   return (
     <>
-      {/* Main Header */}
       <header
-        className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
-          scrolled
-            ? 'bg-white shadow-md'
-            : 'bg-white/95'
-        }`}
+        className="fixed top-0 left-0 right-0 z-[100] transition-all duration-300"
+        style={{
+          background: navBg,
+          backdropFilter: navBlur,
+          borderBottom: navBorder,
+        }}
       >
-        <div className="mx-auto w-full max-w-7xl px-6 sm:px-10 md:px-14 lg:px-20">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-[70px]">
+            
             {/* Logo */}
-            <LoadingLink
-              href="/"
-              className="flex-shrink-0"
-              aria-label="Lingotech Solutions Home"
-            >
-              <div className="relative h-[50px] w-32 md:w-36">
-                <Image
-                  src="/lingo_tech.jpeg"
-                  alt="Lingotech Solutions Logo"
-                  fill
-                  sizes="144px"
-                  className="object-contain"
-                  priority
-                />
-              </div>
-            </LoadingLink>
+            <Link href="/" className="flex items-center group">
+              <Image
+                src="/lingo-tech.png"
+                alt="LingoTech Solutions"
+                width={190}
+                height={55}
+                className="h-[38px] sm:h-[52px] w-auto object-contain transition-all duration-300"
+                priority
+              />
+            </Link>
 
             {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center gap-8">
-              {NAV_LINKS.map(({ label, href, id }) => (
-                <LoadingLink
-                  key={id}
+            <nav className="hidden md:flex items-center gap-8">
+              {NAV_LINKS.map(({ label, href }) => (
+                <Link
+                  key={href}
                   href={href}
-                  className={`text-[15px] font-medium transition-colors py-2 ${
-                    isActive(href)
-                      ? 'text-emerald-600'
-                      : 'text-gray-700 hover:text-emerald-600'
-                  }`}
+                  className="relative text-sm font-semibold transition-all duration-300"
+                  style={{
+                    color: isActive(href) ? linkActiveColor : linkColor,
+                    fontFamily: "'Poppins', sans-serif",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = isDarkHeroZone ? '#ffffff' : 'var(--green-accent)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = isActive(href) ? linkActiveColor : linkColor;
+                  }}
                 >
                   {label}
-                </LoadingLink>
+                </Link>
               ))}
 
-              {topRightContent && (
-                <div className="ml-3 pl-3 border-l border-gray-200">
-                  {topRightContent}
-                </div>
-              )}
+              <Link
+                href="/contact"
+                className="inline-flex items-center justify-center px-6 py-2.5 text-sm font-semibold transition-all duration-300 shadow-sm rounded-lg"
+                style={{ 
+                  backgroundColor: isDarkHeroZone ? 'transparent' : 'var(--green-accent)', 
+                  border: isDarkHeroZone ? '2.5px solid rgba(255, 255, 255, 0.45)' : '2.5px solid var(--green-accent)',
+                  color: '#ffffff',
+                  fontFamily: "'Poppins', sans-serif" 
+                }}
+                onMouseEnter={(e) => {
+                  if (isDarkHeroZone) {
+                    e.currentTarget.style.backgroundColor = '#ffffff';
+                    e.currentTarget.style.color = '#0b3c91';
+                    e.currentTarget.style.borderColor = '#ffffff';
+                  } else {
+                    e.currentTarget.style.opacity = '0.9';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (isDarkHeroZone) {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                    e.currentTarget.style.color = '#ffffff';
+                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.45)';
+                  } else {
+                    e.currentTarget.style.opacity = '1.0';
+                  }
+                }}
+              >
+                Let&apos;s Talk
+              </Link>
             </nav>
 
-            {/* Mobile Toggle */}
+            {/* Mobile Menu Toggle */}
             <button
-              onClick={toggleMobileMenu}
-              className="lg:hidden p-2 text-gray-700 hover:text-emerald-600 transition-colors"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="md:hidden p-1 transition-colors duration-300"
+              style={{ color: mobileToggleColor }}
               aria-label="Toggle menu"
             >
-              <Icons.Menu className="w-6 h-6" />
+              {isMobileMenuOpen ? (
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                  <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+              ) : (
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                  <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+                </svg>
+              )}
             </button>
           </div>
         </div>
       </header>
 
-      {/* Mobile Menu */}
+      {/* Mobile Drawer */}
       {isMobileMenuOpen && (
-        <div className="fixed inset-0 z-50 lg:hidden">
-          <div
-            className="absolute inset-0 bg-black/50"
-            onClick={closeMobileMenu}
-          />
-          <div className="absolute right-0 top-0 h-full w-[280px] bg-white shadow-xl overflow-y-auto">
-            <div className="flex items-center justify-between p-4 border-b border-gray-100">
-              <span className="font-semibold text-lg text-gray-900">Menu</span>
-              <button
-                onClick={closeMobileMenu}
-                className="p-2 text-gray-700 hover:text-emerald-600 transition-colors"
+        <div className="fixed inset-0 z-[90] bg-white">
+          <div className="pt-24 px-6 flex flex-col gap-6">
+            {NAV_LINKS.map(({ label, href }) => (
+              <Link
+                key={href}
+                href={href}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="text-2xl font-bold transition-colors duration-300"
+                style={{
+                  color: isActive(href) ? 'var(--green-accent)' : 'var(--text-main)',
+                  fontFamily: "'Poppins', sans-serif",
+                }}
               >
-                <Icons.Close className="w-5 h-5" />
-              </button>
-            </div>
-            <nav className="p-4">
-              {NAV_LINKS.map(({ label, href, id }) => (
-                <LoadingLink
-                  key={id}
-                  href={href}
-                  onClick={closeMobileMenu}
-                  className={`block py-3 font-medium ${
-                    isActive(href)
-                      ? 'text-emerald-600'
-                      : 'text-gray-700 hover:text-emerald-600'
-                  }`}
-                >
-                  {label}
-                </LoadingLink>
-              ))}
-            </nav>
+                {label}
+              </Link>
+            ))}
+            <Link
+              href="/contact"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="inline-flex items-center justify-center mt-8 px-6 py-4 text-base font-bold text-white shadow-md rounded-xl"
+              style={{ backgroundColor: "var(--green-accent)", fontFamily: "'Poppins', sans-serif" }}
+            >
+              Let&apos;s Talk
+            </Link>
           </div>
         </div>
       )}
