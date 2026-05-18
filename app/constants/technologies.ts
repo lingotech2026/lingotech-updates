@@ -8,7 +8,7 @@ export interface Technology {
 export const TECHNOLOGIES: Technology[] = [
     // Frontend
     { id: 'react', name: 'React', iconClass: 'devicon-react-original', category: 'frontend' },
-    { id: 'nextjs', name: 'Next.js', iconClass: 'devicon-nextjs-original', category: 'frontend' },
+    { id: 'nextjs', name: 'Next.js', iconClass: 'devicon-nextjs-plain', category: 'frontend' },
     { id: 'typescript', name: 'TypeScript', iconClass: 'devicon-typescript-plain', category: 'frontend' },
     { id: 'javascript', name: 'JavaScript', iconClass: 'devicon-javascript-plain', category: 'frontend' },
     { id: 'html5', name: 'HTML5', iconClass: 'devicon-html5-plain', category: 'frontend' },
