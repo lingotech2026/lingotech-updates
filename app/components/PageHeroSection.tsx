@@ -8,10 +8,6 @@ interface PageHeroSectionProps {
   backgroundContent?: ReactNode;
 }
 
-/**
- * Reusable hero section component for page headers
- * Eliminates code duplication across About, Services, Contact, and Team pages
- */
 export default function PageHeroSection({
   badge,
   title,
@@ -20,31 +16,47 @@ export default function PageHeroSection({
   backgroundContent,
 }: PageHeroSectionProps) {
   return (
-    <section className="relative py-16 sm:py-20 md:py-24 lg:py-32 overflow-hidden bg-linear-to-br from-primary-700 to-primary-600">
+    <section className="relative pt-28 pb-16 md:pt-36 md:pb-20 overflow-hidden bg-[#F8FAFC]">
+      {/* Grid background */}
+      <div
+        className="absolute inset-0 z-0 pointer-events-none"
+        style={{
+          backgroundImage: `
+            linear-gradient(to right, rgba(11,60,145,0.04) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(11,60,145,0.04) 1px, transparent 1px)
+          `,
+          backgroundSize: '4vw 4vw',
+          maskImage: 'radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 100%)',
+          WebkitMaskImage: 'radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 100%)',
+        }}
+      />
+
+      {/* Glowing orb */}
+      <div className="absolute top-[-10%] right-[-5%] w-[35vw] h-[35vw] rounded-full blur-[120px] opacity-[0.06] pointer-events-none" style={{ background: 'var(--green-accent)' }} />
+      <div className="absolute bottom-[-10%] left-[-5%] w-[25vw] h-[25vw] rounded-full blur-[100px] opacity-[0.05] pointer-events-none" style={{ background: 'var(--green-accent)' }} />
+
       {backgroundContent ? (
-        <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+        <div className="absolute inset-0 pointer-events-none z-0" aria-hidden="true">
           {backgroundContent}
         </div>
       ) : null}
 
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/2 -right-20 sm:-right-40 w-64 sm:w-80 md:w-96 lg:w-150 h-64 sm:h-80 md:h-96 lg:h-150 bg-surface-overlay/5 rounded-full blur-3xl" />
-        <div className="absolute -bottom-20 sm:-bottom-40 -left-20 sm:-left-40 w-64 sm:w-80 md:w-96 lg:w-150 h-64 sm:h-80 md:h-96 lg:h-150 bg-primary-700/30 rounded-full blur-3xl" />
-      </div>
-
-      <div className="container mx-auto px-4 sm:px-6 md:px-8 relative z-10">
-        <div className="max-w-5xl mx-auto">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="max-w-4xl">
           <div className={sideContent ? 'grid items-center gap-8 md:grid-cols-[1fr_auto]' : ''}>
-            <div className="text-white">
-              <div className="mb-4 sm:mb-5 md:mb-6">
-                <span className="inline-block px-3 sm:px-4 md:px-5 py-1.5 sm:py-2 bg-white/10 backdrop-blur-sm rounded-full text-[10px] xs:text-xs sm:text-sm font-semibold tracking-wider uppercase border border-white/20">
+            <div>
+              {/* Badge */}
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 border border-slate-200 bg-white mb-5 shadow-sm">
+                <span className="text-[10px] font-bold uppercase tracking-[0.2em]" style={{ color: 'var(--green-accent)' }}>
                   {badge}
                 </span>
               </div>
-              <h1 className="font-bold mb-4 sm:mb-6 md:mb-8 leading-tight" style={{fontSize: 'clamp(2rem, 1.5rem + 3vw, 5rem)'}}>
+
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 uppercase leading-tight mb-4" style={{ fontFamily: "'Poppins', sans-serif" }}>
                 {title}
               </h1>
-              <p className="text-inverse/90 leading-relaxed max-w-3xl font-light" style={{fontSize: 'clamp(1rem, 0.95rem + 0.5vw, 1.5rem)'}}>
+
+              <p className="text-slate-600 leading-relaxed max-w-2xl text-sm sm:text-base font-light">
                 {description}
               </p>
             </div>
@@ -57,6 +69,9 @@ export default function PageHeroSection({
           </div>
         </div>
       </div>
+
+      {/* Bottom border */}
+      <div className="absolute bottom-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(to right, transparent, rgba(15,23,42,0.06), transparent)' }} />
     </section>
   );
 }
