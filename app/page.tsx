@@ -1,16 +1,18 @@
 import type { Metadata } from 'next';
 import Script from 'next/script';
+import dynamic from 'next/dynamic';
 import Navbar from './components/Navbar';
 import HeroSection from './components/HeroSection';
-import ServicesSection from './components/ServicesSection';
-import PortfolioSection from './components/PortfolioSection';
-import ToolsMarquee from './components/ToolsMarquee';
-import AboutSection from './components/AboutSection';
-import WhyChooseUsSection from './components/WhyChooseUsSection';
-import GetInTouchSection from './components/GetInTouchSection';
-import LatestBlogSection from './components/LatestBlogSection';
-import Footer from './components/Footer';
 import { SITE_URL } from './constants/site';
+
+const ServicesSection = dynamic(() => import('./components/ServicesSection'), { ssr: true });
+const PortfolioSection = dynamic(() => import('./components/PortfolioSection'), { ssr: true });
+const ToolsMarquee = dynamic(() => import('./components/ToolsMarquee'), { ssr: true });
+const AboutSection = dynamic(() => import('./components/AboutSection'), { ssr: true });
+const WhyChooseUsSection = dynamic(() => import('./components/WhyChooseUsSection'), { ssr: true });
+const GetInTouchSection = dynamic(() => import('./components/GetInTouchSection'), { ssr: true });
+const LatestBlogSection = dynamic(() => import('./components/LatestBlogSection'), { ssr: true });
+const Footer = dynamic(() => import('./components/Footer'), { ssr: true });
 
 const ogImage = '/team_collaboration_office.png';
 

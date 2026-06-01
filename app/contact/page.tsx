@@ -13,7 +13,7 @@ type FormErrors = Record<string, string>;
 const CONTACT_DETAILS = [
   { icon: Phone, label: "Phone", value: "+977 9748263080", href: "tel:+9779748263080" },
   { icon: Mail, label: "Email", value: "solutionslingotech@gmail.com", href: "mailto:solutionslingotech@gmail.com" },
-  { icon: MapPin, label: "Location", value: "Lalitpur, Kathmandu, Nepal", href: null },
+  { icon: MapPin, label: "Location", value: "Lalitpur, Nepal", href: null },
 ];
 
 export default function ContactPage() {
@@ -42,13 +42,27 @@ export default function ContactPage() {
     }
     setErrors({});
     setIsSubmitting(true);
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    setIsSubmitting(false);
-    setSubmitStatus("success");
-    setTimeout(() => {
-      setFormData({ name: "", email: "", subject: "", message: "" });
-      setSubmitStatus("idle");
-    }, 3000);
+    
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) throw new Error("Failed to send message");
+
+      setSubmitStatus("success");
+      setTimeout(() => {
+        setFormData({ name: "", email: "", subject: "", message: "" });
+        setSubmitStatus("idle");
+      }, 3000);
+    } catch (error) {
+      console.error(error);
+      setSubmitStatus("error");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
