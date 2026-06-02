@@ -3,7 +3,7 @@ import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'solutionslingotech@gmail.com';
-const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'no-reply@lingotechsolutions.com.np';
+const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'no-reply@lingotechsolutions.com';
 
 export async function POST(req: Request) {
   try {
@@ -15,7 +15,7 @@ export async function POST(req: Request) {
     }
 
     // 1. Send email to admin
-    await resend.emails.send({
+    const adminEmailResponse = await resend.emails.send({
       from: FROM_EMAIL,
       to: ADMIN_EMAIL,
       subject: `New Contact Form Submission: ${subject}`,
@@ -28,8 +28,13 @@ export async function POST(req: Request) {
       `,
     });
 
+    if (adminEmailResponse.error) {
+      console.error('Resend Admin Email Error:', adminEmailResponse.error);
+      return NextResponse.json({ error: adminEmailResponse.error.message || 'Failed to send admin email' }, { status: 500 });
+    }
+
     // 2. Send auto-reply to user
-    await resend.emails.send({
+    const userEmailResponse = await resend.emails.send({
       from: FROM_EMAIL,
       to: email,
       subject: 'Thank you for contacting Lingotech Solutions',
@@ -44,9 +49,14 @@ export async function POST(req: Request) {
       `,
     });
 
+    if (userEmailResponse.error) {
+      console.error('Resend User Email Error:', userEmailResponse.error);
+      return NextResponse.json({ error: userEmailResponse.error.message || 'Failed to send auto-reply' }, { status: 500 });
+    }
+
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {
-    console.error('Resend Error:', error);
-    return NextResponse.json({ error: 'Failed to send message' }, { status: 500 });
+    console.error('Catch Error:', error);
+    return NextResponse.json({ error: 'Failed to process request' }, { status: 500 });
   }
 }
