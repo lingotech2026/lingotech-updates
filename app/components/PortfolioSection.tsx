@@ -118,6 +118,9 @@ export default function PortfolioSection() {
                         alt={project.title}
                         fill
                         className="object-contain sm:object-cover object-top transition-transform duration-700 group-hover:scale-[1.02]"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        priority={index === 0}
+                        loading={index === 0 ? "eager" : "lazy"}
                       />
                     </div>
                   </div>

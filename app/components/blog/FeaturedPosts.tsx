@@ -39,6 +39,8 @@ export default function FeaturedPosts({ posts }: FeaturedPostsProps) {
               fill
               sizes="(max-width: 1024px) 100vw, 50vw"
               className="object-cover opacity-30 group-hover:scale-110 group-hover:opacity-40 transition-all duration-700"
+              priority
+              fetchPriority="high"
             />
           </div>
 
@@ -82,6 +84,7 @@ export default function FeaturedPosts({ posts }: FeaturedPostsProps) {
                   fill
                   sizes="(max-width: 640px) 128px, 160px"
                   className="object-cover group-hover:scale-110 transition-transform duration-500"
+                  loading="lazy"
                 />
               </div>
 

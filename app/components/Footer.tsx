@@ -41,7 +41,7 @@ export default function Footer() {
                 width={190}
                 height={55}
                 className="h-[52px] w-auto object-contain"
-                priority
+                loading="lazy"
               />
             </Link>
             <p className="text-slate-600 text-sm leading-relaxed mb-6">

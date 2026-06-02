@@ -25,6 +25,8 @@ export default function BlogCard({ post, index = 0 }: BlogCardProps) {
             alt={post.title}
             fill
             className="object-cover transition-transform duration-700 group-hover:scale-110"
+            sizes="(max-width: 768px) 100vw, 33vw"
+            loading="lazy"
           />
           {/* Overlay with Title & Category */}
           <div className="absolute inset-0 bg-[#0B3C91]/40 flex flex-col items-center justify-center p-6 text-center">

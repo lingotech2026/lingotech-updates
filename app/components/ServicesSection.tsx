@@ -98,6 +98,7 @@ export default function ServicesSection() {
                       width={28}
                       height={28}
                       className="object-contain"
+                      loading="lazy"
                     />
                   </div>
                 </div>

@@ -46,6 +46,8 @@ export default function LatestBlogSection() {
                     fill
                     style={{ objectFit: 'cover' }}
                     className="opacity-80 group-hover:opacity-100 transition-opacity duration-300 grayscale group-hover:grayscale-0"
+                    sizes="(max-width: 768px) 100vw, 256px"
+                    loading="lazy"
                   />
                 </div>
 

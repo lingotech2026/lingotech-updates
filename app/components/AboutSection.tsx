@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import ScrollReveal from "./ScrollReveal";
+import dynamic from 'next/dynamic';
+
+const LazyVideo = dynamic(() => import('./LazyVideo'), { ssr: false });
 
 export default function AboutSection() {
   return (
@@ -48,17 +51,13 @@ export default function AboutSection() {
             <div className="relative">
               <div className="relative border-2 p-1.5 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(11,60,145,0.08)]" style={{ borderColor: "var(--green-accent)" }}>
                 <div className="relative aspect-video bg-slate-100 overflow-hidden group">
-                  <video
-                    className="absolute inset-0 w-full h-full object-cover  transition-opacity"
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
+                  <LazyVideo
+                    src="/work.mp4"
+                    className="absolute inset-0 w-full h-full object-cover transition-opacity"
                     aria-label="Company Overview Video"
-                  >
-                    <source src="/work.mp4" type="video/mp4" />
-                  </video>
+                  />
                 </div>
+
               </div>
               
               <div className="absolute -top-3 -left-3 w-10 h-10 border-t-2 border-l-2 border-slate-300"></div>

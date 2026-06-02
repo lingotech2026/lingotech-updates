@@ -170,6 +170,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1200px"
                     className="object-cover"
                     priority
+                    fetchPriority="high"
                   />
                 </div>
               </div>

@@ -57,6 +57,7 @@ export default function Navbar() {
                 height={55}
                 className="h-[38px] sm:h-[52px] w-auto object-contain transition-all duration-300"
                 priority
+                fetchPriority="high"
               />
             </Link>
 

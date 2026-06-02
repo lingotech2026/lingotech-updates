@@ -33,7 +33,7 @@ const ServiceCard = memo(function ServiceCard({ service, index }: ServiceCardPro
 
         {/* Icon */}
         <div className="w-12 h-12 flex items-center justify-center border border-slate-200 bg-white mb-5">
-          <Image src={service.iconPath} alt={service.title} width={28} height={28} style={{ objectFit: 'contain' }} />
+          <Image src={service.iconPath} alt={service.title} width={28} height={28} style={{ objectFit: 'contain' }} loading="lazy" />
         </div>
 
         <h3 className="text-lg font-bold text-slate-900 mb-2 uppercase" style={{ fontFamily: "'Poppins', sans-serif" }}>

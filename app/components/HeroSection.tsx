@@ -4,6 +4,9 @@ import Link from 'next/link';
 import { ArrowRight, Code2, Cpu, Database, Sparkles } from 'lucide-react';
 import ScrollReveal from './ScrollReveal';
 import { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
+
+const LazyVideo = dynamic(() => import('./LazyVideo'), { ssr: false });
 
 export default function HeroSection() {
   const [mounted, setMounted] = useState(false);
@@ -13,16 +16,10 @@ export default function HeroSection() {
     <section className="relative min-h-[100vh] bg-slate-950 overflow-hidden flex items-center justify-center pt-24 pb-12">
       
       {/* Background Video */}
-      <video
-        autoPlay
-        loop
-        muted
-        playsInline
+      <LazyVideo
+        src="/hero-video.mp4"
         className="absolute inset-0 w-full h-full object-cover z-0"
-      >
-        <source src="/hero-video.mp4" type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
+      />
 
       {/* Dark Overlay Mask - strong enough to make text crisp against video */}
       <div 
