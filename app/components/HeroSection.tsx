@@ -143,7 +143,7 @@ export default function HeroSection() {
             {[
               { id: '01', title: 'Global Reach', value: '6+', suffix: 'Countries' },
               { id: '02', title: 'Projects Delivered', value: '15+', suffix: 'Completed' },
-              { id: '03', title: 'Industry Experience', value: '1+', suffix: 'Years' },
+              { id: '03', title: 'Industry Experience', value: '3+', suffix: 'Years' },
               { id: '04', title: 'Client Satisfaction', value: '99%', suffix: 'Rate' },
             ].map((metric) => (
               <div key={metric.id} className="p-6 group hover:bg-white/5 transition-colors duration-500">

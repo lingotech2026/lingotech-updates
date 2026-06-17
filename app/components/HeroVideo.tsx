@@ -12,8 +12,6 @@ export default function HeroVideo() {
         poster={HERO_VIDEO_POSTER}
         className="absolute inset-0 w-full h-full"
         decorative
-        loadOnIdle={false}
-        loadOnViewport={false}
       />
     </div>
   );
