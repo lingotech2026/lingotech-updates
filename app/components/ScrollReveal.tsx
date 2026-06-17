@@ -14,6 +14,8 @@ interface ScrollRevealProps {
   threshold?: number;
   rootMargin?: string;
   once?: boolean;
+  /** Render visible immediately — use for above-the-fold LCP content */
+  eager?: boolean;
 }
 
 /**
@@ -29,11 +31,10 @@ export default function ScrollReveal({
   threshold = 0.15,
   rootMargin = '0px 0px -8% 0px',
   once = true,
+  eager = false,
 }: ScrollRevealProps) {
   const elementRef = useRef<HTMLDivElement | null>(null);
-  // Always initialize to false to match server-rendered HTML (no `is-visible` class on SSR).
-  // All browser API access is deferred to useEffect to avoid hydration mismatches.
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(eager);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
   // Sync reduced-motion preference after mount (client-only)
@@ -55,6 +56,11 @@ export default function ScrollReveal({
 
   // Set up IntersectionObserver after mount (client-only)
   useEffect(() => {
+    if (eager) {
+      setIsVisible(true);
+      return;
+    }
+
     if (prefersReducedMotion || !('IntersectionObserver' in window)) {
       // If reduced motion or no observer support, mark visible immediately
       setIsVisible(true);
@@ -90,7 +96,7 @@ export default function ScrollReveal({
     return () => {
       observer.disconnect();
     };
-  }, [once, prefersReducedMotion, rootMargin, threshold]);
+  }, [eager, once, prefersReducedMotion, rootMargin, threshold]);
 
   const style = {
     '--reveal-delay': `${delay}ms`,

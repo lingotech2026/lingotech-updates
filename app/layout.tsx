@@ -3,13 +3,15 @@ import { Poppins, Pinyon_Script } from 'next/font/google';
 import './globals.css';
 import AppLoadingProvider from './components/AppLoadingProvider';
 import { SITE_URL } from './constants/site';
+import { HERO_VIDEO_POSTER } from './constants/videos';
 
 const poppins = Poppins({
   variable: '--font-poppins',
   subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700', '800', '900'],
+  weight: ['400', '600', '700', '800'],
   display: 'swap',
   preload: true,
+  adjustFontFallback: true,
 });
 
 const pinyonScript = Pinyon_Script({
@@ -17,11 +19,12 @@ const pinyonScript = Pinyon_Script({
   subsets: ['latin'],
   weight: '400',
   display: 'swap',
-  preload: true,
+  preload: false,
+  adjustFontFallback: true,
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(`${SITE_URL}/`),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: 'Lingotech Solutions - Turning Ideas Into Digital Reality',
     template: '%s | Lingotech Solutions',
@@ -55,7 +58,7 @@ export const metadata: Metadata = {
         width: 800,
         height: 600,
         alt: 'Lingotech Solutions Logo',
-      }
+      },
     ],
   },
   twitter: {
@@ -70,7 +73,9 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: '/lingo-tech.png',
+    apple: '/lingo-tech.png',
   },
+  manifest: '/manifest.webmanifest',
 };
 
 export const viewport: Viewport = {
@@ -86,23 +91,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${poppins.variable} ${pinyonScript.variable}`}>
       <head>
-        <link rel="preconnect" href="https://images.unsplash.com" />
-        <link rel="dns-prefetch" href="https://images.unsplash.com" />
-        <link rel="preconnect" href="https://media.licdn.com" />
-        <link rel="dns-prefetch" href="https://media.licdn.com" />
-        {/* Defer render-blocking CSS */}
+        <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
         <link
-          rel="stylesheet"
-          href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css"
+          rel="preload"
+          as="image"
+          href={HERO_VIDEO_POSTER}
+          type="image/webp"
+          fetchPriority="high"
         />
       </head>
-      <body 
-        className={`${poppins.variable} ${pinyonScript.variable} antialiased bg-white text-slate-900`}
-        style={{ fontFamily: 'var(--font-poppins), sans-serif' }}
-      >
-        <AppLoadingProvider 
+      <body className="antialiased bg-white text-slate-900 font-[family-name:var(--font-poppins)]">
+        <AppLoadingProvider
           minLoadingSeconds={0}
           showOnRefresh={false}
           showOnNavigation={false}

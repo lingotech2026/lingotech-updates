@@ -1,4 +1,6 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next';
+
+const staticAssetCache = 'public, max-age=31536000, immutable';
 
 const nextConfig: NextConfig = {
   compress: true,
@@ -6,26 +8,37 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   images: {
     formats: ['image/avif', 'image/webp'],
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'images.unsplash.com',
-      },
-      {
-        protocol: 'https',
-        hostname: 'media.licdn.com',
-      },
-    ],
+    deviceSizes: [384, 640, 750, 828, 1080, 1200, 1920],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256],
+    minimumCacheTTL: 31536000,
   },
   async headers() {
     return [
       {
-        source: '/:all*(svg|jpg|jpeg|png|gif|ico|webp|avif|mp4|webm)',
+        source: '/videos/:path*',
+        headers: [{ key: 'Cache-Control', value: staticAssetCache }],
+      },
+      {
+        source: '/:path*.mp4',
+        headers: [{ key: 'Cache-Control', value: staticAssetCache }],
+      },
+      {
+        source: '/:path*.webm',
+        headers: [{ key: 'Cache-Control', value: staticAssetCache }],
+      },
+      {
+        source: '/:path*.(svg|jpg|jpeg|png|gif|ico|webp|avif)',
+        headers: [{ key: 'Cache-Control', value: staticAssetCache }],
+      },
+      {
+        source: '/_next/static/:path*',
+        headers: [{ key: 'Cache-Control', value: staticAssetCache }],
+      },
+      {
+        source: '/:path*',
         headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
-          },
+          { key: 'X-Content-Type-Options', value: 'nosniff' },
+          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
         ],
       },
     ];

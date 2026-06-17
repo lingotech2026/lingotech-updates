@@ -1,13 +1,10 @@
-'use client';
-import { useMemo } from 'react';
 import { TECHNOLOGIES, Technology } from '../constants/technologies';
 import ScrollReveal from './ScrollReveal';
 
+const row1 = TECHNOLOGIES.slice(0, Math.ceil(TECHNOLOGIES.length / 2));
+const row2 = TECHNOLOGIES.slice(Math.ceil(TECHNOLOGIES.length / 2));
+
 export default function ToolsMarquee() {
-    const { row1, row2 } = useMemo(() => ({
-        row1: TECHNOLOGIES.slice(0, Math.ceil(TECHNOLOGIES.length / 2)),
-        row2: TECHNOLOGIES.slice(Math.ceil(TECHNOLOGIES.length / 2)),
-    }), []);
 
     const renderTechCard = (tech: Technology, index: number) => {
         const isNextJs = tech.id === 'nextjs';
@@ -15,15 +12,7 @@ export default function ToolsMarquee() {
         return (
             <div
                 key={`${tech.id}-${index}`}
-                className="inline-flex items-center gap-2 px-5 py-3 mx-2 bg-[#F8FAFC] border border-slate-200/60 transition-all duration-300 shadow-[0_2px_8px_rgba(15,23,42,0.01)] hover:shadow-[0_8px_16px_rgba(11,60,145,0.04)]"
-                onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = "var(--green-accent)";
-                    e.currentTarget.style.transform = 'translateY(-2px)';
-                }}
-                onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = "rgba(15, 23, 42, 0.06)";
-                    e.currentTarget.style.transform = 'translateY(0)';
-                }}
+                className="inline-flex items-center gap-2 px-5 py-3 mx-2 bg-[#F8FAFC] border border-slate-200/60 transition-all duration-300 shadow-[0_2px_8px_rgba(15,23,42,0.01)] hover:shadow-[0_8px_16px_rgba(11,60,145,0.04)] hover:border-[var(--green-accent)] hover:-translate-y-0.5"
             >
                 {isNextJs ? (
                     <svg style={{ width: 16, height: 16, color: 'var(--green-accent)' }} viewBox="0 0 24 24" fill="currentColor">

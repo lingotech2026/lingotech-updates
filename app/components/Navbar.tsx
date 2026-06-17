@@ -120,7 +120,9 @@ export default function Navbar() {
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="md:hidden p-1 transition-colors duration-300"
               style={{ color: mobileToggleColor }}
-              aria-label="Toggle menu"
+              aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={isMobileMenuOpen}
+              aria-controls="mobile-navigation"
             >
               {isMobileMenuOpen ? (
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
@@ -150,6 +152,7 @@ export default function Navbar() {
 
         {/* Sidebar Panel */}
         <div
+          id="mobile-navigation"
           className={`absolute top-0 right-0 h-full w-[290px] max-w-[80vw] bg-white border-l border-slate-100 shadow-2xl flex flex-col justify-between transform transition-transform duration-300 ease-out ${
             isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
           }`}
@@ -163,7 +166,8 @@ export default function Navbar() {
                 width={130}
                 height={38}
                 className="h-[32px] w-auto object-contain"
-                priority
+                loading="lazy"
+                sizes="130px"
               />
             </Link>
             <button

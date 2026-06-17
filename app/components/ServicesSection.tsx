@@ -1,4 +1,3 @@
-'use client';
 import Link from "next/link"
 import Image from "next/image"
 import { ArrowRight } from "lucide-react"
@@ -77,10 +76,7 @@ export default function ServicesSection() {
             <ScrollReveal key={index} animation="up" delay={index * 100}>
               <Link
                 href={service.href}
-                className="group relative bg-[#F8FAFC] p-6 transition-all duration-300 block h-full shadow-[0_2px_8px_rgba(15,23,42,0.02)] hover:shadow-[0_12px_24px_rgba(11,60,145,0.06)]"
-                style={{ border: "1px solid rgba(15, 23, 42, 0.06)" }}
-                onMouseEnter={(e) => { e.currentTarget.style.borderColor = "var(--green-accent)"; e.currentTarget.style.transform = "translateY(-4px)" }}
-                onMouseLeave={(e) => { e.currentTarget.style.borderColor = "rgba(15, 23, 42, 0.06)"; e.currentTarget.style.transform = "translateY(0)" }}
+                className="group relative bg-[#F8FAFC] p-6 transition-all duration-300 block h-full shadow-[0_2px_8px_rgba(15,23,42,0.02)] hover:shadow-[0_12px_24px_rgba(11,60,145,0.06)] interactive-card"
               >
                 {/* Color Accent Bar */}
                 <div

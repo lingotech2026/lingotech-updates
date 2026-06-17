@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Big+Shoulders+Display:wght@400;600;700;800;900&display=swap');
 @import "tailwindcss";
 
 :root {
@@ -45,7 +44,7 @@
 }
 
 body {
-  font-family: 'Poppins', sans-serif;
+  font-family: var(--font-poppins), system-ui, -apple-system, sans-serif;
   line-height: 1.6;
   background-color: var(--bg-pure);
   color: var(--text-main);
@@ -56,16 +55,18 @@ body {
 }
 
 /* Typography styles */
-h1, h2, h3, h4, h5, h6 {
-  font-family: 'Poppins', 'Space Grotesk', sans-serif;
-  text-transform: uppercase;
-  font-weight: 800;
-  color: var(--text-main);
-  margin-top: 0;
-}
+@layer base {
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-poppins), system-ui, sans-serif;
+    text-transform: uppercase;
+    font-weight: 800;
+    color: var(--text-main);
+    margin-top: 0;
+  }
 
-p {
-  color: var(--text-muted);
+  p {
+    color: var(--text-muted);
+  }
 }
 
 /* =========================================
@@ -88,7 +89,7 @@ p {
   letter-spacing: 0.15em;
   color: var(--blue-brand);
   margin-bottom: 1rem;
-  font-family: 'Poppins', sans-serif;
+  font-family: var(--font-poppins), system-ui, sans-serif;
 }
 
 /* Base Buttons */
@@ -105,7 +106,7 @@ p {
   transition: all 0.3s ease;
   cursor: pointer;
   text-decoration: none;
-  font-family: 'Poppins', sans-serif;
+  font-family: var(--font-poppins), system-ui, sans-serif;
   border-radius: 0;
 }
 
@@ -150,6 +151,33 @@ p {
   100% { transform: translateX(-33.333%); }
 }
 
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-spin-slow {
+  animation: spin-slow 20s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-float,
+  .animate-spin-slow,
+  .marquee-scroll-right,
+  .marquee-scroll-left {
+    animation: none !important;
+  }
+}
+
+/* Hide captions on decorative background videos */
+video[aria-hidden="true"]::cue {
+  display: none;
+}
+
 .marquee-wrapper {
   overflow: hidden;
   position: relative;
@@ -165,6 +193,35 @@ p {
   animation: scrollLeft 38s linear infinite;
 }
 
+/* Scroll reveal — initial state matches SSR (hidden) */
+.reveal {
+  opacity: 0;
+  transition:
+    opacity var(--reveal-duration, 700ms) ease,
+    transform var(--reveal-duration, 700ms) ease;
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+.reveal-fade { transform: none; }
+.reveal-up { transform: translateY(24px); }
+.reveal-left { transform: translateX(-24px); }
+.reveal-right { transform: translateX(24px); }
+.reveal-zoom { transform: scale(0.96); }
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
 /* Card hover */
 .card-hover {
   transition: all 0.3s ease;
@@ -175,4 +232,40 @@ p {
   border-color: var(--blue-brand);
   transform: translateY(-5px);
   box-shadow: 0 10px 30px rgba(11, 60, 145, 0.08);
+}
+
+/* Interactive card utility — replaces inline hover handlers */
+.interactive-card {
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+.interactive-card:hover {
+  border-color: var(--green-accent);
+  transform: translateY(-4px);
+}
+
+/* Loading screen */
+.loading-brand-text {
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.loading-brand-typing {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  border-right: 3px solid rgba(255, 255, 255, 0.7);
+  animation: typing 2s steps(9) 0.2s both, blink 0.8s step-end infinite;
+}
+
+@keyframes typing {
+  from { width: 0; }
+  to { width: 9ch; }
+}
+
+@keyframes blink {
+  50% { border-color: transparent; }
 }
