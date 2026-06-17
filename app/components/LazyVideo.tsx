@@ -68,13 +68,14 @@ export default function LazyVideo({
   }, []);
 
   useEffect(() => {
+    let isMounted = true;
     const node = containerRef.current;
     if (!node) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          loadVideo();
+          if (isMounted) loadVideo();
           observer.disconnect();
         }
       },
@@ -84,10 +85,12 @@ export default function LazyVideo({
     if (loadOnViewport) {
       observer.observe(node);
     }
-    const cancelIdle = loadOnIdle ? scheduleIdle(loadVideo) : () => {};
+    const cancelIdle = loadOnIdle ? scheduleIdle(() => {
+      if (isMounted) loadVideo();
+    }) : () => {};
 
     const onInteraction = () => {
-      loadVideo();
+      if (isMounted) loadVideo();
       window.removeEventListener('pointerdown', onInteraction);
       window.removeEventListener('keydown', onInteraction);
     };
@@ -96,6 +99,7 @@ export default function LazyVideo({
     window.addEventListener('keydown', onInteraction, { passive: true });
 
     return () => {
+      isMounted = false;
       observer.disconnect();
       cancelIdle();
       window.removeEventListener('pointerdown', onInteraction);
@@ -104,33 +108,45 @@ export default function LazyVideo({
   }, [loadOnIdle, loadOnViewport, loadVideo]);
 
   useEffect(() => {
+    let isMounted = true;
     if (!shouldLoad || !videoRef.current) return;
 
     const video = videoRef.current;
 
-    if (decorative) {
-      Array.from(video.textTracks).forEach((track) => {
-        track.mode = 'disabled';
-      });
-    }
+    const disableTracks = () => {
+      if (decorative) {
+        Array.from(video.textTracks).forEach((track) => {
+          track.mode = 'hidden';
+        });
+      }
+    };
+
+    // Try to disable immediately if already loaded
+    disableTracks();
+    // And listen for metadata to load
+    video.addEventListener('loadedmetadata', disableTracks);
 
     const play = async () => {
       if (!autoPlay) return;
       try {
         await video.play();
-        setIsPlaying(true);
+        if (isMounted) setIsPlaying(true);
       } catch {
-        setIsPlaying(false);
+        if (isMounted) setIsPlaying(false);
       }
     };
 
     if (video.readyState >= 2) {
       void play();
-      return;
+    } else {
+      video.addEventListener('loadeddata', play, { once: true });
     }
 
-    video.addEventListener('loadeddata', play, { once: true });
-    return () => video.removeEventListener('loadeddata', play);
+    return () => {
+      isMounted = false;
+      video.removeEventListener('loadedmetadata', disableTracks);
+      video.removeEventListener('loadeddata', play);
+    };
   }, [autoPlay, decorative, shouldLoad]);
 
   return (
