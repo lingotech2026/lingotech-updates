@@ -16,7 +16,7 @@ export const TEAM_MEMBERS: TeamMember[] = [
     role: 'Co-Founder & CTO / Software Engineer',
   },
   {
-    image: '/team/nirush.jpeg',
+    image: '/team/nirush.png',
     name: 'Nirush Man Shrestha',
     role: 'Co-Founder & CPO / Software Engineer',
   },

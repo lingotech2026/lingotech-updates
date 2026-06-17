@@ -37,12 +37,12 @@ export default function TeamPage() {
                   <div className="absolute top-0 left-0 right-0 h-[2px] opacity-0 group-hover:opacity-100 transition-opacity z-20" style={{ backgroundColor: 'var(--green-accent)' }} />
 
                   {/* Photo */}
-                  <div className="relative h-100 sm:h-80 overflow-hidden bg-slate-100">
+                  <div className="relative h-[360px] sm:h-[420px] overflow-hidden bg-slate-100">
                     <Image
                       src={member.image}
                       alt={`${member.name} - ${member.role}`}
                       width={600}
-                      height={280}
+                      height={420}
                       className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
                       loading="lazy"
                     />
