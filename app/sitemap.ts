@@ -6,7 +6,12 @@ const STATIC_ROUTES = [
   { path: '/', changeFrequency: 'weekly' as const, priority: 1 },
   { path: '/about', changeFrequency: 'monthly' as const, priority: 0.8 },
   { path: '/services', changeFrequency: 'monthly' as const, priority: 0.8 },
-  { path: '/team', changeFrequency: 'monthly' as const, priority: 0.7 },
+  {
+    path: '/team',
+    changeFrequency: 'monthly' as const,
+    priority: 0.7,
+    images: [`${SITE_URL}/team/nirajandhungel.png`, `${SITE_URL}/team/shishab.jpeg`, `${SITE_URL}/team/nirush.png`],
+  },
   { path: '/contact', changeFrequency: 'monthly' as const, priority: 0.7 },
   { path: '/blog', changeFrequency: 'weekly' as const, priority: 0.8 },
 ];
@@ -17,6 +22,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: new Date('2026-06-17'),
     changeFrequency: route.changeFrequency,
     priority: route.priority,
+    ...(route.images ? { images: route.images } : {}),
   }));
 
   const blogEntries = BLOG_POSTS.map((post) => ({
